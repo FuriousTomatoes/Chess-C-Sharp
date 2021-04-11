@@ -18,13 +18,14 @@ namespace Chess
         {
             get
             {
+                possibleMoves = new List<Point>();
                 CheckMoves();
                 return possibleMoves;
             }
         }
         public Cell<Piece> Cell { get; set; }
         public Player Player { get; }
-        public ChessPiece ChessPiece { get; }
+        public ChessPiece ChessPiece { get; set; }
 
         public Piece(ChessPiece chessPiece, Player player)
         {
@@ -53,7 +54,7 @@ namespace Chess
         /// <summary>
         /// Checks every possible melee move.
         /// </summary>
-        protected void CheckMeleeMove(Point move, MeleeMoveType meleeMoveType)
+        protected bool CheckMeleeMove(Point move, MeleeMoveType meleeMoveType)
         {
             bool isValid = Cell.GameBoard.IsOnBoard(move) && meleeMoveType switch
             {
@@ -62,7 +63,12 @@ namespace Chess
                 MeleeMoveType.MoveIfVoid | MeleeMoveType.MoveOnEnemies => Cell.GameBoard.Board.FromPoint(move).Piece == null || Cell.GameBoard.Board.FromPoint(move).Piece.Player != Player,
                 _ => throw new Exception(),
             };
-            if (isValid) possibleMoves.Add(move);
+            if (isValid)
+            {
+                possibleMoves.Add(move);
+                return true;
+            }
+            return false;
         }
 
         protected void CheckRangedMove(RangedMoveType rangedMoveType)

@@ -9,7 +9,7 @@ namespace Chess
 {
     class Program
     {
-        public static Chess Chess = new Chess();
+        public static Chess Chess = new Chess(OnPromotion);
         static void ChessboardDraw()
         {
             Console.WriteLine(" +---+---+---+---+---+---+---+---+");
@@ -26,8 +26,11 @@ namespace Chess
             if (Chess.IsOnCheckmate(Player.White)) Console.WriteLine("White on checkmate!");
             if (Chess.IsOnCheckmate(Player.White)) Console.WriteLine("Black on checkmate!");
         }
-        static void ChessboardDraw(List<Point> possibleMoves)
+
+        static void ChessboardDraw(Point point)
         {
+            List<Point> possibleMoves = Chess.PossibleMovesOnBoard(point);
+
             Console.WriteLine(" +---+---+---+---+---+---+---+---+");
             for (int y = 7; y >= 0; y--)
             {
@@ -51,19 +54,26 @@ namespace Chess
         static void Main()
         {
             ChessboardDraw();
-            while (true)
+            while (Chess.Winner() == Player.None)
             {
                 try
                 {
-                    Point start = Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize);
-                    Console.Clear();
-                    ChessboardDraw(Chess.GameBoard.Board.FromPoint(start).Piece.PossibleMoves);
-                    Chess.Move(start, Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize));
+                    Point start = Read.Coords(8, 8);
+                    if (Chess.GameBoard.Board.FromPoint(start).Piece != null)
+                    {
+                        Console.Clear();
+                        ChessboardDraw(start);
+                    }
+                    Chess.Move(start, Read.Coords(8, 8));
                     Console.Clear();
                     ChessboardDraw();
                 }
                 catch (Exception) { }
             }
+        }
+        private static ChessPiece OnPromotion()
+        {
+            return ChessPiece.Queen;
         }
     }
 }

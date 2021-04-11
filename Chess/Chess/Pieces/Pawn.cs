@@ -6,10 +6,9 @@
         protected override void CheckMoves()
         {
             //Move the pawn ahead.
-            CheckMeleeMove(GetMovement(0, 1), MeleeMoveType.MoveIfVoid);
-
-            //Move the pawn ahead twice.
-            //if()
+            if (CheckMeleeMove(GetMovement(0, 1), MeleeMoveType.MoveIfVoid) && Cell.Position.Y == 1 || Cell.Position.Y == 6)
+                //Move the pawn ahead twice.
+                CheckMeleeMove(GetMovement(0, 2), MeleeMoveType.MoveIfVoid);
 
             //Attack to right.
             CheckMeleeMove(GetMovement(1, 1), MeleeMoveType.MoveOnEnemies);

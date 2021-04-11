@@ -2,13 +2,12 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <Reference Include="DoubleZ">
-      <HintPath>..\..\..\..\GitHub Repositories\DoubleZ-Library\DoubleZ\bin\Debug\netstandard2.0\DoubleZ.dll</HintPath>
+      <HintPath>..\..\..\DoubleZ-Library\DoubleZ\DoubleZ\bin\Release\net5.0\DoubleZ.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

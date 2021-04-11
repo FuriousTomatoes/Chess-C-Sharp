@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Chess
 {
     public enum ChessPiece : byte { Pawn, Queen, King, Knight, Bishop, Rook }
-    public enum Player : byte { White, Black }
+    public enum Player : byte { None, White, Black }
     [Flags]
     public enum Castling { LongWhite = 1, LongBlack = 2, ShortWhite = 4, ShortBlack = 8 }
 
@@ -31,10 +31,12 @@ namespace Chess
         public Player Turn { get; private set; } = Player.White;
         public Castling castling = Castling.LongBlack | Castling.LongWhite | Castling.ShortBlack | Castling.ShortWhite;
         public GameBoard<Piece> GameBoard = new GameBoard<Piece>(8, 8);
-        private Piece OnEnPassant { get; set; }
+        private Piece onEnPassant;
+        private readonly Func<ChessPiece> onPromotion;
 
-        public Chess()
+        public Chess(Func<ChessPiece> onPromotion)
         {
+            this.onPromotion = onPromotion;
             for (int x = 0; x < 8; x++)
             {
                 GameBoard.Add(new Pawn(Player.White), new Point(x, 1));
@@ -75,12 +77,13 @@ namespace Chess
         {
             if (CanMove(start, finish))
             {
-                MakeMovement(start, finish);
-
                 Piece mover = GameBoard.Board.FromPoint(start).Piece;
 
-                //Manages castling.
+                MakeMovement(start, finish);
+
                 if (mover != null)
+                {
+                    //Manages castling.
                     if (mover.ChessPiece == ChessPiece.Rook)
                     {
                         Castling longCastling = mover.Player == Player.White ? Castling.LongWhite : Castling.LongBlack;
@@ -91,11 +94,41 @@ namespace Chess
                     }
                     else if (mover.ChessPiece == ChessPiece.King)
                         castling &= mover.Player == Player.Black ? Castling.LongWhite | Castling.ShortWhite : Castling.LongBlack | Castling.ShortBlack;
+
+                    //Manages promotions.
+                    if (mover.ChessPiece == ChessPiece.Pawn && finish.Y == 7 || finish.Y == 0)
+                        Promotion(mover, finish);
+                }
             }
             else if (!Castle(Turn, start, finish))
                 throw new InvalidChessMoveException();
 
             ChangeTurn();
+        }
+
+        public Player Winner()
+        {
+            if (IsOnCheckmate(Player.White)) return Player.Black;
+            else if (IsOnCheckmate(Player.Black)) return Player.White;
+            else return Player.None;
+        }
+
+        /// <summary>
+        /// Returns the moves that a piece can make.
+        /// </summary>
+        /// <param name="point">The position of the piece to check.</param>
+        /// <returns>The list of points where the piece really can move.</returns>
+        public List<Point> PossibleMovesOnBoard(Point point)
+        {
+            Piece piece = GameBoard.Board.FromPoint(point).Piece;
+            if (piece == null) return default;
+
+            List<Point> possibleMovesOnBoard = new List<Point>();
+
+            foreach (Point move in piece.PossibleMoves.ToArray())
+                if (CanMove(point, move)) possibleMovesOnBoard.Add(move);
+
+            return possibleMovesOnBoard;
         }
 
         private bool CanMove(Point start, Point finish)
@@ -163,12 +196,12 @@ namespace Chess
 
             //Checks en passant
             if (ToMove.ChessPiece == ChessPiece.Pawn && finish == ToMove.GetMovement(0, 2))
-                OnEnPassant = ToMove;
-            else OnEnPassant = null;
+                onEnPassant = ToMove;
+            else onEnPassant = null;
 
             //In case of en passant, remove the eaten piece.
-            if (OnEnPassant != null && ToMove.ChessPiece == ChessPiece.Pawn && finish == OnEnPassant.GetMovement(0, -1))
-                GameBoard.RemoveAt(OnEnPassant.Cell.Position);
+            if (onEnPassant != null && ToMove.ChessPiece == ChessPiece.Pawn && finish == onEnPassant.GetMovement(0, -1))
+                GameBoard.RemoveAt(onEnPassant.Cell.Position);
 
             //Removes the eaten piece from the list.
             else if (ToGoTo != null)
@@ -178,6 +211,27 @@ namespace Chess
             }
 
             GameBoard.Move(start, finish);
+        }
+
+        private void Promotion(Piece pieceToPromote, Point pointWherePromote)
+        {
+            List<Piece> list = pieceToPromote.Player == Player.White ? whitePieces : blackPieces;
+            ChessPiece promotionResult = onPromotion();
+
+            GameBoard.RemoveAt(pointWherePromote);
+            list.Remove(pieceToPromote);
+
+            Piece newPiece = promotionResult switch
+            {
+                ChessPiece.Queen => new Queen(pieceToPromote.Player),
+                ChessPiece.Rook => new Rook(pieceToPromote.Player),
+                ChessPiece.Bishop => new Bishop(pieceToPromote.Player),
+                ChessPiece.Knight => new Knight(pieceToPromote.Player),
+                _ => throw new InvalidChessMoveException(),
+            };
+
+            GameBoard.Add(newPiece, pointWherePromote);
+            list.Add(newPiece);
         }
 
         private bool Castle(Player turn, Point start, Point finish)
