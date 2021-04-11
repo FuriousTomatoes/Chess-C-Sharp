@@ -21,6 +21,10 @@ namespace Chess
                 Console.WriteLine("\n +---+---+---+---+---+---+---+---+");
             }
             Console.WriteLine($"   a   b   c   d   e   f   g   h");
+            if (Chess.IsOnCheck(Player.White)) Console.WriteLine("White on check!");
+            if (Chess.IsOnCheck(Player.Black)) Console.WriteLine("Black on check!");
+            if (Chess.IsOnCheckmate(Player.White)) Console.WriteLine("White on checkmate!");
+            if (Chess.IsOnCheckmate(Player.White)) Console.WriteLine("Black on checkmate!");
         }
         static void ChessboardDraw(List<Point> possibleMoves)
         {
@@ -49,12 +53,16 @@ namespace Chess
             ChessboardDraw();
             while (true)
             {
-                Point start = Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize);
-                Console.Clear();
-                ChessboardDraw(Chess.GameBoard.Board.FromPoint(start).Piece.PossibleMoves);
-                Chess.Move(start, Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize));
-                Console.Clear();
-                ChessboardDraw();
+                try
+                {
+                    Point start = Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize);
+                    Console.Clear();
+                    ChessboardDraw(Chess.GameBoard.Board.FromPoint(start).Piece.PossibleMoves);
+                    Chess.Move(start, Read.Coords(Chess.GameBoard.XSize, Chess.GameBoard.YSize));
+                    Console.Clear();
+                    ChessboardDraw();
+                }
+                catch (Exception) { }
             }
         }
     }
