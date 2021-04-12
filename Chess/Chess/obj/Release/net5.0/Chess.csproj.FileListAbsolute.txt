@@ -1,0 +1,14 @@
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.GeneratedMSBuildEditorConfig.editorconfig
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.AssemblyInfoInputs.cache
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.AssemblyInfo.cs
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.csproj.CoreCompileInputs.cache
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\Chess.deps.json
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\Chess.dll
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\ref\Chess.dll
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\Chess.pdb
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\DoubleZ.dll
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\bin\Release\net5.0\DoubleZ.pdb
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.csproj.CopyComplete
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.dll
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\ref\Chess.dll
+D:\GIORGIO\Dati\GitHub Repositories\Chess-C-Sharp\Chess\Chess\obj\Release\net5.0\Chess.pdb
